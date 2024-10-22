@@ -5,9 +5,9 @@
 package proyecto.edd1.main;
 
 class Nodo {
-    String nombre;
-    Nodo[] conexiones;
-    int conexionIndex;
+    private String nombre;
+    private Nodo[] conexiones;
+    private int conexionIndex;
 
     public Nodo(String nombre) {
         this.nombre = nombre;
@@ -16,25 +16,67 @@ class Nodo {
     }
 
     public void agregarConexion(Nodo nodo) {
-        if (conexionIndex < conexiones.length) {
-            conexiones[conexionIndex++] = nodo;
+        if (getConexionIndex() < getConexiones().length) {
+            getConexiones()[conexionIndex++] = nodo;
         } else {
-            Nodo[] newConexiones = new Nodo[conexiones.length * 2];
-            System.arraycopy(conexiones, 0, newConexiones, 0, conexiones.length);
-            conexiones = newConexiones;
-            conexiones[conexionIndex++] = nodo;
+            Nodo[] newConexiones = new Nodo[getConexiones().length * 2];
+            System.arraycopy(getConexiones(), 0, newConexiones, 0, getConexiones().length);
+            setConexiones(newConexiones);
+            getConexiones()[conexionIndex++] = nodo;
         }
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(nombre).append(" -> [");
-        for (int i = 0; i < conexionIndex; i++) {
-            sb.append(conexiones[i].nombre);
-            if (i < conexionIndex - 1) sb.append(", ");
+        sb.append(getNombre()).append(" -> [");
+        for (int i = 0; i < getConexionIndex(); i++) {
+            sb.append(getConexiones()[i].getNombre());
+            if (i < getConexionIndex() - 1) sb.append(", ");
         }
         sb.append("]");
         return sb.toString();
+    }
+
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * @return the conexiones
+     */
+    public Nodo[] getConexiones() {
+        return conexiones;
+    }
+
+    /**
+     * @param conexiones the conexiones to set
+     */
+    public void setConexiones(Nodo[] conexiones) {
+        this.conexiones = conexiones;
+    }
+
+    /**
+     * @return the conexionIndex
+     */
+    public int getConexionIndex() {
+        return conexionIndex;
+    }
+
+    /**
+     * @param conexionIndex the conexionIndex to set
+     */
+    public void setConexionIndex(int conexionIndex) {
+        this.conexionIndex = conexionIndex;
     }
 }
