@@ -19,8 +19,11 @@ public class PruebaProyectoE {
     public static void main(String[] args) {
         FileExplorer fileExplorer = new FileExplorer();
         Nodo[] nodos = fileExplorer.openFileExplorerAndCreateAdjacencyList();
-
-        if (nodos != null) {
+        
+       Grafo grafo= new Grafo(1000);
+       grafo.cargarGrafoDesdeJSON(nodos);
+       grafo.visualizarGrafo();
+       if (nodos != null) {
             System.out.println("Lista de Adyacencia:");
             for (Nodo nodo : nodos) {
                 System.out.println(nodo);
