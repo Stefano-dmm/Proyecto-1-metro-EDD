@@ -74,56 +74,68 @@ public class FileExplorer {
                             String[] conexion = nodoStr.split(":");
                             nombreNodo = conexion[0].trim();
                             conexionOtraLinea = conexion[1].trim();
-                            System.out.println("  Nodo encontrado (con conexión): " + nombreNodo + " -> " + conexionOtraLinea);
                         } else {
                             nombreNodo = nodoStr;
-                            System.out.println("  Nodo encontrado: " + nombreNodo);
                         }
 
-                        Nodo nodoActual = null;
-                        for (int i = 0; i < nodoIndex; i++) {
-                            if (nodos[i].nombre.equals(nombreNodo)) {
-                                nodoActual = nodos[i];
-                                break;
-                            }
-                        }
-
-                        if (nodoActual == null) {
-                            nodoActual = new Nodo(nombreNodo);
-                            nodos[nodoIndex++] = nodoActual;
-                        }
-
-                        if (nodoAnterior != null) {
-                            nodoAnterior.agregarConexion(nodoActual);
-                            System.out.println("    Conexión creada: " + nodoAnterior.nombre + " -> " + nodoActual.nombre);
-                        }
-
-                        if (conexionOtraLinea != null) {
-                            Nodo nodoConexion = null;
+                        // Ignorar nodos llamados "Linea 1", "Linea 2", "Linea 3", "Linea 4"
+                        if (!nombreNodo.startsWith("Linea ")) {
+                            Nodo nodoActual = null;
                             for (int i = 0; i < nodoIndex; i++) {
-                                if (nodos[i].nombre.equals(conexionOtraLinea)) {
-                                    nodoConexion = nodos[i];
+                                if (nodos[i] != null && nodos[i].nombre.equals(nombreNodo)) {
+                                    nodoActual = nodos[i];
                                     break;
                                 }
                             }
 
-                            if (nodoConexion == null) {
-                                nodoConexion = new Nodo(conexionOtraLinea);
-                                nodos[nodoIndex++] = nodoConexion;
+                            if (nodoActual == null) {
+                                nodoActual = new Nodo(nombreNodo);
+                                nodos[nodoIndex++] = nodoActual;
                             }
 
-                            nodoActual.agregarConexion(nodoConexion);
-                            nodoConexion.agregarConexion(nodoActual);
-                            System.out.println("    Conexión entre líneas creada: " + nodoActual.nombre + " <-> " + nodoConexion.nombre);
-                        }
+                            if (nodoAnterior != null && !nodoAnterior.nombre.startsWith("Linea ")) {
+                                nodoAnterior.agregarConexion(nodoActual);
+                                System.out.println("    Conexión creada: " + nodoAnterior.nombre + " -> " + nodoActual.nombre);
+                            }
 
-                        nodoAnterior = nodoActual;
+                            if (conexionOtraLinea != null && !conexionOtraLinea.startsWith("Linea ")) {
+                                Nodo nodoConexion = null;
+                                for (int i = 0; i < nodoIndex; i++) {
+                                    if (nodos[i] != null && nodos[i].nombre.equals(conexionOtraLinea)) {
+                                        nodoConexion = nodos[i];
+                                        break;
+                                    }
+                                }
+
+                                if (nodoConexion == null) {
+                                    nodoConexion = new Nodo(conexionOtraLinea);
+                                    nodos[nodoIndex++] = nodoConexion;
+                                }
+
+                                nodoActual.agregarConexion(nodoConexion);
+                                nodoConexion.agregarConexion(nodoActual);
+                                System.out.println("    Conexión entre líneas creada: " + nodoActual.nombre + " <-> " + nodoConexion.nombre);
+                            }
+
+                            nodoAnterior = nodoActual; // Actualizar nodo anterior
+                        }
                     }
                     System.out.println(); // Línea en blanco entre líneas de metro
                 }
+
+                // Filtrar nodos para no incluir "Linea"
                 Nodo[] resultado = new Nodo[nodoIndex];
-                System.arraycopy(nodos, 0, resultado, 0, nodoIndex);
-                return resultado;
+                int resultadoIndex = 0;
+                for (int i = 0; i < nodoIndex; i++) {
+                    if (nodos[i] != null && !nodos[i].nombre.startsWith("Linea ")) {
+                        resultado[resultadoIndex++] = nodos[i];
+                    }
+                }
+
+                // Ajustar el tamaño del array de resultado
+                Nodo[] nodosFinales = new Nodo[resultadoIndex];
+                System.arraycopy(resultado, 0, nodosFinales, 0, resultadoIndex);
+                return nodosFinales;
             } else {
                 System.out.println("El JSON no tiene el formato esperado.");
                 return null;
@@ -135,4 +147,3 @@ public class FileExplorer {
         }
     }
 }
-
