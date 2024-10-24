@@ -20,10 +20,16 @@ public class PruebaProyectoE {
         FileExplorer fileExplorer = new FileExplorer();
         Nodo[] nodos = fileExplorer.openFileExplorerAndCreateAdjacencyList();
         
-       Grafo grafo= new Grafo(1000);
-       grafo.cargarGrafoDesdeJSON(nodos);
-       grafo.visualizarGrafo();
-       if (nodos != null) {
+        Grafo grafo = new Grafo(1000);
+        grafo.cargarGrafoDesdeJSON(nodos);
+        
+        // Crear y mostrar la ventana de nodos
+        NodoViewer nodoViewer = new NodoViewer(nodos);
+        
+        // Visualizar el grafo
+        grafo.visualizarGrafo();
+        
+        if (nodos != null) {
             System.out.println("Lista de Adyacencia:");
             for (Nodo nodo : nodos) {
                 System.out.println(nodo);
@@ -33,4 +39,3 @@ public class PruebaProyectoE {
         }
     }
 }
-
