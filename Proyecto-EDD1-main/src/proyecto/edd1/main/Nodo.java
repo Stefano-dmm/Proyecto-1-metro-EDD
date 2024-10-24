@@ -9,12 +9,15 @@ class Nodo {
     private String linea;
     private Nodo[] conexiones;
     private int conexionIndex;
+    private int numeroLinea; // Atributo para almacenar el número de línea
+    private boolean areaComercial; // Nuevo atributo para indicar si es un área comercial
 
     public Nodo(String nombre, String linea) {
         this.nombre = nombre;
         this.linea = linea;
         this.conexiones = new Nodo[10]; // Initial size, can grow dynamically
         this.conexionIndex = 0;
+        this.areaComercial = false; // Inicialmente no es un área comercial
     }
 
     // Agrega una conexión entre nodos (vértices)
@@ -74,5 +77,21 @@ class Nodo {
 
     public void setConexionIndex(int conexionIndex) {
         this.conexionIndex = conexionIndex;
+    }
+
+    public int getNumeroLinea() {
+        return numeroLinea;
+    }
+
+    public void setNumeroLinea(int numeroLinea) {
+        this.numeroLinea = numeroLinea;
+    }
+
+    public boolean isAreaComercial() {
+        return areaComercial;
+    }
+
+    public void setAreaComercial(boolean areaComercial) {
+        this.areaComercial = areaComercial;
     }
 }

@@ -72,6 +72,74 @@ public class Grafo {
         }
         return false;
     }
+    public void agregarLinea(String[] estaciones, String linea) {
+    Nodo nodoAnterior = null;
+    for (String estacion : estaciones) {
+        agregarVertice(estacion, linea);
+        if (nodoAnterior != null) {
+            agregarArista(nodoAnterior.getNombre(), estacion);
+        }
+        nodoAnterior = obtenerNodoPorNombre(estacion);  // método auxiliar para encontrar un nodo
+    }
+}
+
+private Nodo obtenerNodoPorNombre(String nombre) {
+    for (Nodo nodo : nodos) {
+        if (nodo != null && nodo.getNombre().equals(nombre)) {
+            return nodo;
+        }
+    }
+    return null;
+}
+
+    public void eliminarEstacion(String nombre) {
+    Nodo nodoAEliminar = obtenerNodoPorNombre(nombre);
+    
+    if (nodoAEliminar == null) {
+        System.out.println("La estación " + nombre + " no existe.");
+        return;
+    }
+
+    // Eliminar las conexiones que apuntan al nodo a eliminar
+    for (int i = 0; i < numNodos; i++) {
+        if (nodos[i] != null) {
+            eliminarConexion(nodos[i], nodoAEliminar);
+        }
+    }
+
+    // Eliminar el nodo del array de nodos
+    for (int i = 0; i < numNodos; i++) {
+        if (nodos[i] != null && nodos[i].getNombre().equals(nombre)) {
+            nodos[i] = null;
+            break;
+        }
+    }
+
+    // Si estás usando GraphStream, elimina también el nodo del grafo visualizado
+    if (graphStream.getNode(nombre) != null) {
+        graphStream.removeNode(nombre);
+    }
+
+    System.out.println("La estación " + nombre + " ha sido eliminada.");
+}
+
+        // Método auxiliar para eliminar la conexión hacia el nodo a eliminar
+        private void eliminarConexion(Nodo origen, Nodo destino) {
+            Nodo[] conexiones = origen.getConexiones();
+            int conexionIndex = origen.getConexionIndex();
+
+            for (int i = 0; i < conexionIndex; i++) {
+                if (conexiones[i] != null && conexiones[i].getNombre().equals(destino.getNombre())) {
+                    // Desplazar las conexiones para llenar el hueco
+                    for (int j = i; j < conexionIndex - 1; j++) {
+                        conexiones[j] = conexiones[j + 1];
+                    }
+                    conexiones[conexionIndex - 1] = null;
+                    origen.setConexionIndex(conexionIndex - 1);
+                    break;
+                }
+            }
+        }
 
     // Método para obtener el índice de un nodo por nombre
     private int obtenerIndice(String nombre) {
