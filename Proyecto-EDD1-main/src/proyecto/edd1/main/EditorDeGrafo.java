@@ -5,6 +5,7 @@
 package proyecto.edd1.main;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -27,7 +28,7 @@ public class EditorDeGrafo extends javax.swing.JFrame {
     // Método para llenar el JComboBox con los nodos existentes
     private void llenarComboBoxNodos() {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        for (Nodo nodo : grafo.getNodos()) { // Asegúrate de tener un método getNodos() en la clase Grafo
+        for (Nodo nodo : grafo.getNodos()) { // Asegúrate de que getNodos() esté definido
             if (nodo != null) {
                 model.addElement(nodo.getNombre());
             }
@@ -38,7 +39,7 @@ public class EditorDeGrafo extends javax.swing.JFrame {
     // Método para llenar jComboBox3 con los nodos existentes
     private void llenarComboBox3() {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        for (Nodo nodo : grafo.getNodos()) { // Asegúrate de tener un método getNodos() en la clase Grafo
+        for (Nodo nodo : grafo.getNodos()) { // Asegúrate de que getNodos() esté definido
             if (nodo != null) {
                 model.addElement(nodo.getNombre());
             }
@@ -117,6 +118,12 @@ public class EditorDeGrafo extends javax.swing.JFrame {
 
         jLabel5.setText("Nodo seleccionado");
 
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -143,9 +150,9 @@ public class EditorDeGrafo extends javax.swing.JFrame {
                         .addComponent(jButton1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE)
                     .addComponent(jTextField1)
-                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE))
                 .addGap(20, 20, 20))
             .addGroup(layout.createSequentialGroup()
                 .addGap(104, 104, 104)
@@ -185,17 +192,42 @@ public class EditorDeGrafo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        // Obtener el tipo de búsqueda (DFS o BFS)
+        String tipoBusqueda = (String) jComboBox1.getSelectedItem();
+        
+        // Verificar que el tipo de búsqueda sea DFS
+        if (!tipoBusqueda.equals("DFS")) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona DFS para esta operación.");
+            return; // Salir si no es DFS
+        }
+
+        // Obtener el nodo inicial
+        String nodoInicial = (String) jComboBox3.getSelectedItem();
+        
+        // Obtener la cantidad de nodos de separación
+        int distanciaMaxima;
+        try {
+            distanciaMaxima = Integer.parseInt(jTextField1.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingresa un número válido para la distancia máxima.");
+            return; // Salir si el número no es válido
+        }
+
+        // Llamar al método del grafo para seleccionar nodos con salto
+        grafo.seleccionarNodosConSaltoDFS(nodoInicial, distanciaMaxima);
+        
+        // Opcional: Mostrar un mensaje de éxito
+        JOptionPane.showMessageDialog(this, "Nodos seleccionados correctamente.");
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
@@ -203,18 +235,17 @@ public class EditorDeGrafo extends javax.swing.JFrame {
 
     // Método que se llama cuando se selecciona un nodo en jComboBox2
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
-        String nombreNodo = (String) jComboBox2.getSelectedItem();
-        mostrarInformacionNodo(nombreNodo);
+        String nombreNodo = (String) jComboBox2.getSelectedItem(); // Obtener el nodo seleccionado
+        mostrarInformacionNodo(nombreNodo); // Llamar al método para mostrar la información
     }
 
     // Método para mostrar la información del nodo en jTextArea1
     private void mostrarInformacionNodo(String nombreNodo) {
-        Nodo[] nodos = grafo.getNodos();
+        Nodo[] nodos = grafo.getNodos(); // Obtener los nodos del grafo
         for (Nodo nodo : nodos) {
             if (nodo != null && nodo.getNombre().equals(nombreNodo)) {
                 StringBuilder contenido = new StringBuilder();
                 contenido.append("Nombre: ").append(nodo.getNombre()).append("\n");
-                contenido.append("Línea: ").append(nodo.getLinea()).append("\n");
                 contenido.append("Conexiones: ");
                 for (int i = 0; i < nodo.getConexionIndex(); i++) {
                     contenido.append(nodo.getConexiones()[i].getNombre());
@@ -229,10 +260,57 @@ public class EditorDeGrafo extends javax.swing.JFrame {
                 } else {
                     contenido.append("Área Comercial: No");
                 }
-                jTextArea1.setText(contenido.toString());
-                break;
+                jTextArea1.setText(contenido.toString()); // Establecer el texto en el JTextArea
+                break; // Salir del bucle una vez que se encuentra el nodo
             }
         }
+    }
+
+    private void jButtonMarcarAreasComercialesActionPerformed(java.awt.event.ActionEvent evt) {
+        String tipoMovimiento = (String) jComboBox1.getSelectedItem(); // Obtener el tipo de movimiento
+        String nodoInicial = (String) jComboBox2.getSelectedItem(); // Obtener el nodo inicial
+        int distanciaMaxima = Integer.parseInt(jTextField1.getText()); // Obtener la distancia máxima
+
+        if (tipoMovimiento.equals("DFS")) {
+            grafo.marcarAreasComercialesDFS(nodoInicial, distanciaMaxima);
+        } else if (tipoMovimiento.equals("BFS")) {
+            grafo.marcarAreasComercialesBFS(nodoInicial, distanciaMaxima);
+        }
+    }
+
+    private void jButtonGenerarAreaComercialActionPerformed(java.awt.event.ActionEvent evt) {
+        // Obtener el tipo de búsqueda (DFS o BFS)
+        String tipoBusqueda = (String) jComboBox1.getSelectedItem();
+        
+        // Obtener la cantidad de nodos entre áreas comerciales
+        int distanciaMaxima;
+        try {
+            distanciaMaxima = Integer.parseInt(jTextField1.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingresa un número válido para la distancia máxima.");
+            return; // Salir si el número no es válido
+        }
+        
+        // Obtener el primer nodo
+        String nodoInicial = (String) jComboBox3.getSelectedItem();
+        
+        // Llamar a la función que marca los nodos como comerciales
+        if (tipoBusqueda.equals("DFS")) {
+            grafo.seleccionarNodosConSaltoDFS(nodoInicial, distanciaMaxima);
+        } else if (tipoBusqueda.equals("BFS")) {
+            grafo.seleccionarNodosConSaltoBFS(nodoInicial, distanciaMaxima);
+        }
+        
+        // Mostrar el recorrido en el JTextArea
+        jTextArea1.setText(grafo.getRecorridoNodos()); // Asegúrate de que este método esté definido en Grafo
+        
+        // Opcional: Mostrar un mensaje de éxito
+        JOptionPane.showMessageDialog(this, "Áreas comerciales generadas correctamente.");
+    }
+
+    private void mostrarNodoViewer() {
+        Nodo[] nodos = grafo.getNodos(); // Obtener los nodos del grafo
+        NodoViewer nodoViewer = new NodoViewer(nodos, grafo); // Pasar la referencia de grafo
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
