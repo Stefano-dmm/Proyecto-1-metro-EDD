@@ -23,8 +23,9 @@ public class PruebaProyectoE {
         Grafo grafo = new Grafo(1000);
         grafo.cargarGrafoDesdeJSON(nodos);
         
-        // Crear y mostrar la ventana de nodos
-        NodoViewer nodoViewer = new NodoViewer(nodos);
+        // Crear y mostrar la ventana de EditorDeGrafo pasando el grafo
+        EditorDeGrafo editorDeGrafo = new EditorDeGrafo(grafo); // Asegúrate de pasar el grafo aquí
+        editorDeGrafo.setVisible(true);
         
         // Visualizar el grafo
         grafo.visualizarGrafo();
