@@ -6,6 +6,8 @@ package proyecto.edd1.main;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -192,20 +194,18 @@ public class EditorDeGrafo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        String nombreNodo = (String) jComboBox2.getSelectedItem(); // Obtener el nodo seleccionado
+        Nodo[] nodos = grafo.getNodos(); // Obtener los nodos del grafo
+        for (Nodo nodo : nodos) {
+            if (nodo != null && nodo.getNombre().equals(nombreNodo)) {
+                new EditorNodoDialog(this, nodo, grafo); // Abrir el diálogo de edición
+                break;
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // Obtener el tipo de búsqueda (DFS o BFS)
-        String tipoBusqueda = (String) jComboBox1.getSelectedItem();
-        
-        // Verificar que el tipo de búsqueda sea DFS
-        if (!tipoBusqueda.equals("DFS")) {
-            JOptionPane.showMessageDialog(this, "Por favor, selecciona DFS para esta operación.");
-            return; // Salir si no es DFS
-        }
-
         // Obtener el nodo inicial
         String nodoInicial = (String) jComboBox3.getSelectedItem();
         
@@ -218,11 +218,38 @@ public class EditorDeGrafo extends javax.swing.JFrame {
             return; // Salir si el número no es válido
         }
 
-        // Llamar al método del grafo para seleccionar nodos con salto
-        grafo.seleccionarNodosConSaltoDFS(nodoInicial, distanciaMaxima);
-        
-        // Opcional: Mostrar un mensaje de éxito
-        JOptionPane.showMessageDialog(this, "Nodos seleccionados correctamente.");
+        // Obtener el índice del nodo inicial
+        int indiceNodoInicial = grafo.obtenerIndice(nodoInicial);
+        if (indiceNodoInicial == -1) {
+            JOptionPane.showMessageDialog(this, "El nodo inicial no existe en el grafo.");
+            return; // Salir si el nodo no existe
+        }
+
+        // Crear un arreglo para almacenar los nodos intercalados
+        String[] nodosIntercalados = new String[grafo.getNodos().length];
+        int contador = 0;
+
+        // Recorrer los nodos a partir del nodo inicial
+        for (int i = 0; i < grafo.getNodos().length; i++) {
+            if (grafo.getNodos()[i] != null) {
+                // Solo agregar el nodo si está en la posición correcta
+                if ((i - indiceNodoInicial) % (distanciaMaxima + 1) == 0) {
+                    nodosIntercalados[contador++] = grafo.getNodos()[i].getNombre(); // Agregar el nodo a la lista
+                }
+            }
+        }
+
+        // Imprimir la lista de nodos intercalados
+        StringBuilder nodosImpresos = new StringBuilder("Nodos intercalados: ");
+        for (int i = 0; i < contador; i++) {
+            nodosImpresos.append(nodosIntercalados[i]);
+            if (i < contador - 1) {
+                nodosImpresos.append(", ");
+            }
+        }
+
+        System.out.println(nodosImpresos.toString());
+        JOptionPane.showMessageDialog(this, nodosImpresos.toString());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -311,6 +338,16 @@ public class EditorDeGrafo extends javax.swing.JFrame {
     private void mostrarNodoViewer() {
         Nodo[] nodos = grafo.getNodos(); // Obtener los nodos del grafo
         NodoViewer nodoViewer = new NodoViewer(nodos, grafo); // Pasar la referencia de grafo
+    }
+
+    public void actualizarComboBoxNodos() { // Cambiar a public
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        for (Nodo nodo : grafo.getNodos()) { // Asegúrate de que getNodos() esté definido
+            if (nodo != null) {
+                model.addElement(nodo.getNombre());
+            }
+        }
+        jComboBox2.setModel(model); // Establecer el modelo en jComboBox2
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

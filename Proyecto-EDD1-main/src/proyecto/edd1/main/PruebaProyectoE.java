@@ -23,20 +23,15 @@ public class PruebaProyectoE {
         Grafo grafo = new Grafo(1000);
         grafo.cargarGrafoDesdeJSON(nodos);
         
+        // Imprimir la lista de adyacencia al inicio
+        System.out.println("Lista de Adyacencia:");
+        System.out.println(grafo.obtenerListaAdyacencia()); // Imprimir la lista de adyacencia
+
         // Crear y mostrar la ventana de EditorDeGrafo pasando el grafo
         EditorDeGrafo editorDeGrafo = new EditorDeGrafo(grafo); // Asegúrate de pasar el grafo aquí
         editorDeGrafo.setVisible(true);
         
         // Visualizar el grafo
         grafo.visualizarGrafo();
-        
-        if (nodos != null) {
-            System.out.println("Lista de Adyacencia:");
-            for (Nodo nodo : nodos) {
-                System.out.println(nodo);
-            }
-        } else {
-            System.out.println("No se pudo crear la lista de adyacencia.");
-        }
     }
 }

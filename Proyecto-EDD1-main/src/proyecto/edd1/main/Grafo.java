@@ -142,13 +142,13 @@ public class Grafo {
         }
 
     // Método para obtener el índice de un nodo por nombre
-    private int obtenerIndice(String nombre) {
-        for (int i = 0; i < numNodos; i++) {
+    public int obtenerIndice(String nombre) {
+        for (int i = 0; i < nodos.length; i++) {
             if (nodos[i] != null && nodos[i].getNombre().equals(nombre)) {
                 return i;
             }
         }
-        return -1;
+        return -1; // Nodo no encontrado
     }
 
     // Método para visualizar el grafo
@@ -204,26 +204,54 @@ public class Grafo {
         }
 
         boolean[] visitados = new boolean[nodos.length]; // Arreglo para marcar nodos visitados
-        marcarComoAreaComercial(nodoInicio, visitados, 0, distanciaMaxima);
+        marcarComoAreaComercialDFS(nodoInicio, visitados, 0, distanciaMaxima, true, 0);
+
+        // Imprimir nodos seleccionados
+        imprimirNodosSeleccionados();
     }
 
     // Método modificado para marcar nodos como área comercial
-    private void marcarComoAreaComercial(Nodo nodo, boolean[] visitados, int distanciaActual, int distanciaMaxima) {
+    private void marcarComoAreaComercialDFS(Nodo nodo, boolean[] visitados, int distanciaActual, int distanciaMaxima, boolean esNodoInicial, int contador) {
         if (visitados[obtenerIndice(nodo.getNombre())]) {
             return; // Si ya se visitó el nodo, salir
         }
 
         visitados[obtenerIndice(nodo.getNombre())] = true; // Marcar el nodo como visitado
-        nodo.setAreaComercial(true); // Marcar como área comercial
 
-        // Recorrer las conexiones
-        for (Nodo conexion : nodo.getConexiones()) {
-            if (conexion != null) {
-                // Solo agregar el nodo si se cumple la condición de salto
-                if (distanciaActual % (distanciaMaxima + 1) == 0) {
-                    conexion.setAreaComercial(true); // Marcar como área comercial
+        // Marcar el nodo inicial como área comercial
+        if (esNodoInicial) {
+            nodo.setAreaComercial(true);
+        } else {
+            // Alternar entre área comercial y no comercial
+            if (contador < distanciaMaxima) {
+                nodo.setAreaComercial(false); // No marcar como área comercial
+            } else {
+                nodo.setAreaComercial(true); // Marcar como área comercial
+            }
+        }
+
+        // Incrementar el contador si no es el nodo inicial
+        if (!esNodoInicial) {
+            contador++;
+        }
+
+        // Recorrer la lista de adyacencia
+        for (int i = 0; i < nodos.length; i++) {
+            if (listaAdyacencia[obtenerIndice(nodo.getNombre())][i] == 1 && !visitados[i]) {
+                Nodo conexion = nodos[i];
+                if (conexion != null) {
+                    marcarComoAreaComercialDFS(conexion, visitados, distanciaActual + 1, distanciaMaxima, false, contador);
                 }
-                marcarComoAreaComercial(conexion, visitados, distanciaActual + 1, distanciaMaxima);
+            }
+        }
+    }
+
+    // Método para imprimir nodos seleccionados
+    private void imprimirNodosSeleccionados() {
+        System.out.println("Nodos seleccionados como áreas comerciales:");
+        for (Nodo nodo : nodos) {
+            if (nodo != null && nodo.isAreaComercial()) {
+                System.out.println(nodo.getNombre());
             }
         }
     }
@@ -236,31 +264,41 @@ public class Grafo {
         }
 
         boolean[] visitados = new boolean[nodos.length]; // Arreglo para marcar nodos visitados
-        Nodo[] cola = new Nodo[nodos.length]; // Arreglo para simular la cola
+        Nodo[] cola = new Nodo[nodos.length]; // Cola para BFS
         int frente = 0, fin = 0; // Índices para el frente y el fin de la cola
 
         cola[fin++] = nodoInicio; // Agregar el nodo inicial a la cola
         visitados[obtenerIndice(nodoInicio.getNombre())] = true; // Marcar como visitado
         nodoInicio.setAreaComercial(true); // Marcar como área comercial
 
-        int distanciaActual = 0;
+        int contador = 0; // Contador para alternar áreas comerciales
 
-        while (frente < fin && distanciaActual < distanciaMaxima) {
+        while (frente < fin) {
             int size = fin - frente; // Tamaño de la cola en este nivel
             for (int i = 0; i < size; i++) {
                 Nodo nodoActual = cola[frente++]; // Sacar el nodo del frente de la cola
 
-                // Recorrer las conexiones
-                for (Nodo conexion : nodoActual.getConexiones()) {
-                    if (conexion != null && !visitados[obtenerIndice(conexion.getNombre())]) {
-                        visitados[obtenerIndice(conexion.getNombre())] = true; // Marcar como visitado
+                // Recorrer la lista de adyacencia
+                for (int j = 0; j < nodos.length; j++) {
+                    if (listaAdyacencia[obtenerIndice(nodoActual.getNombre())][j] == 1 && !visitados[j]) {
+                        visitados[j] = true; // Marcar como visitado
+                        Nodo conexion = nodos[j];
                         cola[fin++] = conexion; // Agregar a la cola
-                        conexion.setAreaComercial(true); // Marcar como área comercial
+
+                        // Alternar entre área comercial y no comercial
+                        if (contador < distanciaMaxima) {
+                            conexion.setAreaComercial(false); // No marcar como área comercial
+                        } else {
+                            conexion.setAreaComercial(true); // Marcar como área comercial
+                        }
                     }
                 }
             }
-            distanciaActual++;
+            contador++; // Incrementar el contador después de procesar un nivel
         }
+
+        // Imprimir nodos seleccionados
+        imprimirNodosSeleccionados();
 
         System.out.println("Áreas comerciales marcadas a partir de " + nodoInicial);
     }
@@ -405,8 +443,8 @@ public class Grafo {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < numNodos; i++) {
             if (nodos[i] != null) {
-                sb.append(nodos[i].getNombre()).append(" -> [");
-                for (int j = 0; j < numNodos; j++) {
+                sb.append(nodos[i].getNombre()).append(" -> ");
+                for (int j = 0; j < nodos.length; j++) {
                     if (listaAdyacencia[i][j] == 1) {
                         sb.append(nodos[j].getNombre()).append(", ");
                     }
@@ -415,9 +453,47 @@ public class Grafo {
                 if (sb.length() > 0) {
                     sb.setLength(sb.length() - 2);
                 }
-                sb.append("]\n");
+                sb.append("\n");
             }
         }
         return sb.toString();
+    }
+
+    public void eliminarNodo(Nodo nodo) {
+        for (int i = 0; i < numNodos; i++) {
+            if (nodos[i] != null && nodos[i].equals(nodo)) {
+                // Eliminar conexiones
+                for (int j = 0; j < nodo.getConexionIndex(); j++) {
+                    Nodo conexion = nodo.getConexiones()[j];
+                    conexion.setConexionIndex(conexion.getConexionIndex() - 1); // Reducir el índice de conexiones
+                }
+                // Desplazar nodos
+                for (int j = i; j < numNodos - 1; j++) {
+                    nodos[j] = nodos[j + 1];
+                }
+                nodos[numNodos - 1] = null; // Limpiar el último nodo
+                numNodos--;
+                break;
+            }
+        }
+    }
+
+    private void marcarComoAreaComercial(Nodo nodo, boolean[] visitados, int distanciaActual, int distanciaMaxima) {
+        if (visitados[obtenerIndice(nodo.getNombre())]) {
+            return; // Si ya se visitó el nodo, salir
+        }
+
+        visitados[obtenerIndice(nodo.getNombre())] = true; // Marcar el nodo como visitado
+        nodo.setAreaComercial(true); // Marcar como área comercial
+
+        // Recorrer la lista de adyacencia
+        for (int i = 0; i < nodos.length; i++) {
+            if (listaAdyacencia[obtenerIndice(nodo.getNombre())][i] == 1 && !visitados[i]) {
+                Nodo conexion = nodos[i];
+                if (conexion != null) {
+                    marcarComoAreaComercial(conexion, visitados, distanciaActual + 1, distanciaMaxima);
+                }
+            }
+        }
     }
 }
