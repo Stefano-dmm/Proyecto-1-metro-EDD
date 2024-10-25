@@ -197,6 +197,70 @@ private Nodo obtenerNodoPorNombre(String nombre) {
         }
     }
 
+    public void marcarAreasComercialesDFS(String nodoInicial, int distanciaMaxima) {
+        Nodo nodoInicio = obtenerNodoPorNombre(nodoInicial);
+        if (nodoInicio == null) {
+            System.out.println("El nodo inicial no existe.");
+            return;
+        }
+
+        boolean[] visitados = new boolean[nodos.length]; // Arreglo para marcar nodos visitados
+        marcarComoAreaComercial(nodoInicio, visitados, 0, distanciaMaxima);
+    }
+
+    private void marcarComoAreaComercial(Nodo nodo, boolean[] visitados, int distanciaActual, int distanciaMaxima) {
+        if (distanciaActual > distanciaMaxima || visitados[obtenerIndice(nodo.getNombre())]) {
+            return; // Si se supera la distancia máxima o ya se visitó el nodo
+        }
+
+        visitados[obtenerIndice(nodo.getNombre())] = true; // Marcar el nodo como visitado
+        nodo.setAreaComercial(true); // Marcar como área comercial
+
+        // Recorrer las conexiones
+        for (Nodo conexion : nodo.getConexiones()) {
+            if (conexion != null) {
+                marcarComoAreaComercial(conexion, visitados, distanciaActual + 1, distanciaMaxima);
+            }
+        }
+    }
+
+    public void marcarAreasComercialesBFS(String nodoInicial, int distanciaMaxima) {
+        Nodo nodoInicio = obtenerNodoPorNombre(nodoInicial);
+        if (nodoInicio == null) {
+            System.out.println("El nodo inicial no existe.");
+            return;
+        }
+
+        boolean[] visitados = new boolean[nodos.length]; // Arreglo para marcar nodos visitados
+        Nodo[] cola = new Nodo[nodos.length]; // Arreglo para simular la cola
+        int frente = 0, fin = 0; // Índices para el frente y el fin de la cola
+
+        cola[fin++] = nodoInicio; // Agregar el nodo inicial a la cola
+        visitados[obtenerIndice(nodoInicio.getNombre())] = true; // Marcar como visitado
+        nodoInicio.setAreaComercial(true); // Marcar como área comercial
+
+        int distanciaActual = 0;
+
+        while (frente < fin && distanciaActual < distanciaMaxima) {
+            int size = fin - frente; // Tamaño de la cola en este nivel
+            for (int i = 0; i < size; i++) {
+                Nodo nodoActual = cola[frente++]; // Sacar el nodo del frente de la cola
+
+                // Recorrer las conexiones
+                for (Nodo conexion : nodoActual.getConexiones()) {
+                    if (conexion != null && !visitados[obtenerIndice(conexion.getNombre())]) {
+                        visitados[obtenerIndice(conexion.getNombre())] = true; // Marcar como visitado
+                        cola[fin++] = conexion; // Agregar a la cola
+                        conexion.setAreaComercial(true); // Marcar como área comercial
+                    }
+                }
+            }
+            distanciaActual++;
+        }
+
+        System.out.println("Áreas comerciales marcadas a partir de " + nodoInicial);
+    }
+
     // Método para obtener los nodos
     public Nodo[] getNodos() {
         return nodos; // Devuelve el arreglo de nodos
