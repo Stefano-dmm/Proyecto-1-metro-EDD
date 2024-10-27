@@ -88,7 +88,7 @@ public class Grafo {
         System.out.println("Línea agregada entre " + estacion1 + " y " + estacion2);
     }
 
-    private Nodo obtenerNodoPorNombre(String nombre) {
+    public Nodo obtenerNodoPorNombre(String nombre) {
         for (Nodo nodo : nodos) {
             if (nodo != null && nodo.getNombre().equals(nombre)) {
                 return nodo;
@@ -149,7 +149,7 @@ public class Grafo {
 
     // Método para obtener el índice de un nodo por nombre
     public int obtenerIndice(String nombre) {
-        for (int i = 0; i < nodos.length; i++) {
+        for (int i = 0; i < numNodos; i++) {
             if (nodos[i] != null && nodos[i].getNombre().equals(nombre)) {
                 return i;
             }
@@ -518,7 +518,9 @@ public class Grafo {
             return;
         }
 
-        // Marcar el nodo inicial
+        // Marcar el nodo inicial como sucursal y área comercial
+        nodoInicial.setSucursal(true);
+        nodoInicial.setAreaComercial(true);
         org.graphstream.graph.Node nodoGraphStream = graphStream.getNode(nombreNodoInicial);
         nodoGraphStream.setAttribute("ui.class", "inicial");
 
@@ -547,6 +549,9 @@ public class Grafo {
                     cola.encolar(i);
                     
                     if (distancias[i] <= distancia) {
+                        Nodo nodoActual = nodos[i];
+                        nodoActual.setSucursal(false);
+                        nodoActual.setAreaComercial(true);
                         org.graphstream.graph.Node nodoAdyacente = graphStream.getNode(nodos[i].getNombre());
                         nodoAdyacente.setAttribute("ui.class", "covertura");
                     }
@@ -567,7 +572,9 @@ public class Grafo {
             return;
         }
 
-        // Marcar el nodo inicial
+        // Marcar el nodo inicial como sucursal y área comercial
+        nodoInicial.setSucursal(true);
+        nodoInicial.setAreaComercial(true);
         org.graphstream.graph.Node nodoGraphStream = graphStream.getNode(nombreNodoInicial);
         nodoGraphStream.setAttribute("ui.class", "inicial");
 
@@ -588,6 +595,9 @@ public class Grafo {
         for (int i = 0; i < nodos.length; i++) {
             if (listaAdyacencia[indiceNodo][i] == 1 && !visitados[i]) {
                 if (nodosPintados[0] < limite) {
+                    Nodo nodoActual = nodos[i];
+                    nodoActual.setSucursal(false);
+                    nodoActual.setAreaComercial(true);
                     org.graphstream.graph.Node nodoAdyacente = graphStream.getNode(nodos[i].getNombre());
                     nodoAdyacente.setAttribute("ui.class", "covertura");
                     nodosPintados[0]++;
@@ -596,5 +606,9 @@ public class Grafo {
                 }
             }
         }
+    }
+
+    public int[][] getListaAdyacencia() {
+        return listaAdyacencia;
     }
 }
