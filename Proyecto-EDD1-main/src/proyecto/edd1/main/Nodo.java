@@ -6,7 +6,10 @@ package proyecto.edd1.main;
 
 /**
  * Clase que representa un nodo en el grafo del sistema de metro.
- * Contiene información sobre el nombre de la estación, sus conexiones y su estado.
+ * Contiene información sobre el nombre de la estaci&oacute;n, sus conexiones y su estado.
+ * @author Luis Garnica
+ * @author Stefano DiMichelangelo
+ * @version 27/10/2024
  */
 public class Nodo {
     private String nombre;
@@ -28,8 +31,8 @@ public class Nodo {
     }
 
     /**
-     * Agrega una conexión a otro nodo.
-     * @param nodo Nodo con el que se establece la conexión
+     * Agrega una conexi&oacute;n a otro nodo.
+     * @param nodo Nodo con el que se establece la conexi&oacute;n
      */
     public void agregarConexion(Nodo nodo) {
         if (conexionIndex < conexiones.length) {

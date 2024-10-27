@@ -1,5 +1,13 @@
 package proyecto.edd1.main;
 
+/**
+ * Clase NodoViewer que proporciona una interfaz gr&aacute;fica para visualizar la informaci&oacute;n de los nodos y sus conexiones en un grafo.
+ * Permite seleccionar un nodo y mostrar sus detalles y lista de adyacencia.
+ * 
+ * @author Luis Garnica
+ * @author Stefano DiMichelangelo
+ * @version 27/10/2024
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -1,5 +1,15 @@
 package proyecto.edd1.main;
 
+/**
+ * Clase EditorNodoDialog que extiende JDialog. 
+ * Proporciona una interfaz gr&aacute;fica
+ * para editar las propiedades de un nodo de tipo {@link Nodo} dentro de un grafo.
+ * Permite modificar el nombre, definir si es un &aacute;rea comercial o una sucursal,
+ * guardar los cambios y eliminar el nodo.
+ *  @author :Luis Garnica
+ * @author :Stefano DiMichelangelo
+ * @version:27/10/2024
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -11,6 +11,9 @@ import org.graphstream.graph.Graph;
 /**
  * Interfaz gráfica para la edición y visualización del grafo del metro.
  * Permite realizar operaciones como agregar nodos, establecer conexiones y marcar áreas comerciales.
+ * @author :Luis Garnica
+ * @author :Stefano DiMichelangelo
+ * @version:27/10/2024
  */
 public class EditorDeGrafo extends javax.swing.JFrame {
 

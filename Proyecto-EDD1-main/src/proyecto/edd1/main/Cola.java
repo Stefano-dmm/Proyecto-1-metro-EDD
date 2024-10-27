@@ -3,6 +3,9 @@ package proyecto.edd1.main;
 /**
  * Implementación de una estructura de datos Cola para el recorrido BFS.
  * Utiliza una lista enlazada para almacenar los elementos.
+ * @author :Luis Garnica
+ * @author :Stefano DiMichelangelo
+ * @version:27/10/2024
  */
 public class Cola {
     /**
@@ -47,7 +50,7 @@ public class Cola {
     
     /**
      * Remueve y retorna el elemento al frente de la cola.
-     * @return El elemento al frente de la cola, o -1 si está vacía
+     * @return El elemento al frente de la cola, o -1 si est&aacute; vac&iacute;a
      */
     public int desencolar() {
         if (estaVacia()) {

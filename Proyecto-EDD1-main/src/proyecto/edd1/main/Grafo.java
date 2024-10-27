@@ -8,9 +8,14 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
- * Clase que representa un grafo utilizando una matriz de adyacencia.
+ * Clase que representa un grafo utilizando una lista de adyacencia.
  * Implementa funcionalidades para manipular y visualizar el grafo del sistema de metro.
+ * 
+ * @author Luis Garnica
+ * @author Stefano DiMichelangelo
+ * @version 27/10/2024
  */
+
 public class Grafo {
     private Nodo[] nodos; // Arreglo de nodos
     private int numNodos; // Número actual de nodos en el grafo
@@ -23,7 +28,7 @@ public class Grafo {
     // Constructor
     /**
      * Constructor del grafo.
-     * @param maxNodos Número máximo de nodos que puede contener el grafo
+     * @param maxNodos N&uacute;mero m&aacute;ximo de nodos que puede contener el grafo
      */
     public Grafo(int maxNodos) {
         this.nodos = new Nodo[maxNodos];
