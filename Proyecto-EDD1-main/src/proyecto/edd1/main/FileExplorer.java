@@ -12,8 +12,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Clase para manejar la lectura y escritura de archivos JSON que contienen la informaci&oacute;n del grafo.
+ * 
+ * @author Luis Garnica
+ * @author Stefano DiMichelangelo
+ * @version 27/10/2024
+ */
 public class FileExplorer {
 
+    /**
+     * Abre un explorador de archivos y crea una lista de adyacencia a partir del archivo JSON seleccionado.
+     * @return Array de nodos con la informaci&oacute;n cargada del archivo
+     */
     public Nodo[] openFileExplorerAndCreateAdjacencyList() {
         String filePath = openFileExplorer();
         if (filePath != null) {
@@ -222,7 +233,11 @@ public class FileExplorer {
         }
     }
     
-    // Nueva función para guardar la lista de adyacencia en un String (variable)
+    /**
+     * Guarda la lista de adyacencia en formato JSON como String.
+     * @param adjacencyList Lista de adyacencia a guardar
+     * @return String con el contenido JSON de la lista de adyacencia
+     */
     public String saveAdjacencyListToString(Nodo[] adjacencyList) {
         if (adjacencyList == null || adjacencyList.length == 0) {
             System.out.println("La lista de adyacencia está vacía o es nula.");

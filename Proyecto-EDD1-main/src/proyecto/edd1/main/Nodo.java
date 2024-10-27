@@ -4,13 +4,24 @@
  */
 package proyecto.edd1.main;
 
-class Nodo {
+/**
+ * Clase que representa un nodo en el grafo del sistema de metro.
+ * Contiene información sobre el nombre de la estaci&oacute;n, sus conexiones y su estado.
+ * @author Luis Garnica
+ * @author Stefano DiMichelangelo
+ * @version 27/10/2024
+ */
+public class Nodo {
     private String nombre;
     private Nodo[] conexiones;
     private int conexionIndex;
     private boolean areaComercial; // Nuevo atributo para indicar si es un área comercial
     private boolean sucursal;  // Nuevo atributo
 
+    /**
+     * Constructor del nodo.
+     * @param nombre Nombre de la estación
+     */
     public Nodo(String nombre) {
         this.nombre = nombre;
         this.conexiones = new Nodo[10]; // Tamaño inicial, puede crecer dinámicamente
@@ -19,7 +30,10 @@ class Nodo {
         this.sucursal = false;  // Inicializado en falso por defecto
     }
 
-    // Agrega una conexión entre nodos (vértices)
+    /**
+     * Agrega una conexi&oacute;n a otro nodo.
+     * @param nodo Nodo con el que se establece la conexi&oacute;n
+     */
     public void agregarConexion(Nodo nodo) {
         if (conexionIndex < conexiones.length) {
             conexiones[conexionIndex++] = nodo;

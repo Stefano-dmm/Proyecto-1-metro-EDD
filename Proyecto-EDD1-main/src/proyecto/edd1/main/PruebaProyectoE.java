@@ -5,7 +5,7 @@
 package proyecto.edd1.main;
 
 /**
- *
+ *  El main del programa.
  * @author luisg
  */
 public class PruebaProyectoE {
