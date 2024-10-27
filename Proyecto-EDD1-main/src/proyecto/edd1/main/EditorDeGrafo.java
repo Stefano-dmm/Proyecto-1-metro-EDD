@@ -29,8 +29,26 @@ public class EditorDeGrafo extends javax.swing.JFrame {
             "node.inicial { fill-color: #FF8C00; size: 20px; } " +
             "node.covertura { fill-color: #FF0000; size: 15px; }"
         );
+        
+        // Agregar el ActionListener al jComboBox2
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String nombreNodoSeleccionado = (String) jComboBox2.getSelectedItem();
+                if (nombreNodoSeleccionado != null) {
+                    mostrarInformacionNodo(nombreNodoSeleccionado);
+                }
+            }
+        });
+        
         llenarComboBoxNodos(); // Llenar el JComboBox con los nodos
         llenarComboBox3(); // Llenar jComboBox3 con los nodos
+
+        // Agregar ActionListener al jButton1
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarNodoSeleccionado();
+            }
+        });
     }
 
     // Método para llenar el JComboBox con los nodos existentes
@@ -78,7 +96,6 @@ public class EditorDeGrafo extends javax.swing.JFrame {
         jComboBox3 = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
-        jButtonReiniciar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,49 +152,42 @@ public class EditorDeGrafo extends javax.swing.JFrame {
             }
         });
 
-        jButtonReiniciar.setText("Reiniciar Colores");
-        jButtonReiniciar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                reiniciarColoresActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(71, 71, 71))
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel5)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(115, 115, 115)
-                        .addComponent(jButton1)))
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField1)
                     .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(104, 104, 104)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addGap(70, 70, 70)
+                        .addComponent(jButton1)
+                        .addGap(173, 173, 173))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(131, 131, 131))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4)
+                            .addComponent(jScrollPane1))
+                        .addGap(91, 91, 91))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,22 +206,19 @@ public class EditorDeGrafo extends javax.swing.JFrame {
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addGap(32, 32, 32)))
-                .addComponent(jButton1)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton1))
+                .addGap(61, 61, 61))
         );
 
         pack();
@@ -314,26 +321,37 @@ public class EditorDeGrafo extends javax.swing.JFrame {
 
     // Método para mostrar la información del nodo en jTextArea1
     private void mostrarInformacionNodo(String nombreNodo) {
-        Nodo[] nodos = grafo.getNodos();
-        for (Nodo nodo : nodos) {
-            if (nodo != null && nodo.getNombre().equals(nombreNodo)) {
-                StringBuilder contenido = new StringBuilder();
-                contenido.append("Nombre: ").append(nodo.getNombre()).append("\n");
-                contenido.append("Conexiones: ");
-                for (int i = 0; i < nodo.getConexionIndex(); i++) {
-                    contenido.append(nodo.getConexiones()[i].getNombre());
-                    if (i < nodo.getConexionIndex() - 1) {
-                        contenido.append(", ");
-                    }
+        Nodo nodo = grafo.obtenerNodoPorNombre(nombreNodo);
+        if (nodo != null) {
+            StringBuilder contenido = new StringBuilder();
+            contenido.append("Nombre: ").append(nodo.getNombre()).append("\n\n");
+            
+            // Mostrar si es sucursal
+            contenido.append("Sucursal: ").append(nodo.isSucursal() ? "Sí" : "No").append("\n\n");
+            
+            // Mostrar si es área comercial
+            contenido.append("Área Comercial: ").append(nodo.isAreaComercial() ? "Sí" : "No").append("\n\n");
+            
+            // Mostrar conexiones
+            contenido.append("Conexiones: \n");
+            for (int i = 0; i < nodo.getConexionIndex(); i++) {
+                contenido.append("- ").append(nodo.getConexiones()[i].getNombre());
+                if (i < nodo.getConexionIndex() - 1) {
+                    contenido.append("\n");
                 }
-                contenido.append("\n");
-                // Mostrar si es un área comercial
-                contenido.append("Área Comercial: ").append(nodo.isAreaComercial() ? "Sí" : "No").append("\n");
-                // Agregar información de sucursal
-                contenido.append("Sucursal: ").append(nodo.isSucursal() ? "Sí" : "No");
-                
+            }
+            
+            // Asegurarse de que el JTextArea no sea nulo
+            if (jTextArea1 != null) {
                 jTextArea1.setText(contenido.toString());
-                break;
+                // Opcional: hacer que el texto sea visible desde el inicio
+                jTextArea1.setCaretPosition(0);
+            } else {
+                System.out.println("Error: jTextArea1 es nulo");
+            }
+        } else {
+            if (jTextArea1 != null) {
+                jTextArea1.setText("No se encontró información del nodo seleccionado.");
             }
         }
     }
@@ -406,6 +424,27 @@ public class EditorDeGrafo extends javax.swing.JFrame {
     private void reiniciarColoresActionPerformed(java.awt.event.ActionEvent evt) {
         for (org.graphstream.graph.Node node : graphstream.getEachNode()) {
             node.removeAttribute("ui.class");
+            Nodo nodo = grafo.obtenerNodoPorNombre(node.getId());
+            if (nodo != null) {
+                nodo.setSucursal(false);
+                nodo.setAreaComercial(false);
+            }
+        }
+    }
+
+    // Agregar este nuevo método
+    private void editarNodoSeleccionado() {
+        String nombreNodoSeleccionado = (String) jComboBox2.getSelectedItem();
+        if (nombreNodoSeleccionado != null) {
+            Nodo nodoSeleccionado = grafo.obtenerNodoPorNombre(nombreNodoSeleccionado);
+            if (nodoSeleccionado != null) {
+                EditorNodoDialog dialog = new EditorNodoDialog(this, nodoSeleccionado, grafo, graphstream);
+                dialog.setVisible(true);
+                // Actualizar la información mostrada después de cerrar el diálogo
+                mostrarInformacionNodo(nombreNodoSeleccionado);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un nodo para editar.");
         }
     }
 
@@ -424,6 +463,5 @@ public class EditorDeGrafo extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JButton jButtonReiniciar;
     // End of variables declaration//GEN-END:variables
 }
