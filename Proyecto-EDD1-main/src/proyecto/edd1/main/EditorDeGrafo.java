@@ -9,8 +9,8 @@ import javax.swing.JOptionPane;
 import org.graphstream.graph.Graph;
 
 /**
- *
- * @author mainp
+ * Interfaz gráfica para la edición y visualización del grafo del metro.
+ * Permite realizar operaciones como agregar nodos, establecer conexiones y marcar áreas comerciales.
  */
 public class EditorDeGrafo extends javax.swing.JFrame {
 
@@ -18,7 +18,9 @@ public class EditorDeGrafo extends javax.swing.JFrame {
     private Graph graphstream;
 
     /**
-     * Creates new form EditorDeGrafo
+     * Constructor del editor de grafo.
+     * @param grafo Grafo a editar
+     * @param graphstream Instancia de GraphStream para visualización
      */
     public EditorDeGrafo(Grafo grafo, Graph graphstream) { // Constructor que acepta un objeto Grafo
         initComponents();
@@ -51,6 +53,19 @@ public class EditorDeGrafo extends javax.swing.JFrame {
         });
 
  
+    }
+
+    /**
+     * Actualiza los ComboBox con los nodos disponibles en el grafo.
+     */
+    public void actualizarComboBoxNodos() {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        for (Nodo nodo : grafo.getNodos()) { // Asegúrate de que getNodos() esté definido
+            if (nodo != null) {
+                model.addElement(nodo.getNombre());
+            }
+        }
+        jComboBox2.setModel(model); // Establecer el modelo en jComboBox2
     }
 
     // Método para llenar el JComboBox con los nodos existentes
@@ -552,17 +567,7 @@ public class EditorDeGrafo extends javax.swing.JFrame {
         NodoViewer nodoViewer = new NodoViewer(nodos, grafo); // Pasar la referencia de grafo
     }
 
-    public void actualizarComboBoxNodos() { // Cambiar a public
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        for (Nodo nodo : grafo.getNodos()) { // Asegúrate de que getNodos() esté definido
-            if (nodo != null) {
-                model.addElement(nodo.getNombre());
-            }
-        }
-        jComboBox2.setModel(model); // Establecer el modelo en jComboBox2
-    }
-    
-     private void actualizarInterfaz() {
+    private void actualizarInterfaz() {
         // Actualizar los ComboBox y cualquier otra parte de la interfaz que muestre información del grafo
         llenarComboBoxNodos();
         llenarComboBox3();

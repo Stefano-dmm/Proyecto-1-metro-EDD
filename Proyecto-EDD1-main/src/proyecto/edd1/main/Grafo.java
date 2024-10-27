@@ -7,6 +7,10 @@ package proyecto.edd1.main;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 
+/**
+ * Clase que representa un grafo utilizando una matriz de adyacencia.
+ * Implementa funcionalidades para manipular y visualizar el grafo del sistema de metro.
+ */
 public class Grafo {
     private Nodo[] nodos; // Arreglo de nodos
     private int numNodos; // Número actual de nodos en el grafo
@@ -17,6 +21,10 @@ public class Grafo {
     private String recorridoNodos; // Atributo para almacenar el recorrido
 
     // Constructor
+    /**
+     * Constructor del grafo.
+     * @param maxNodos Número máximo de nodos que puede contener el grafo
+     */
     public Grafo(int maxNodos) {
         this.nodos = new Nodo[maxNodos];
         this.numNodos = 0;
@@ -25,6 +33,10 @@ public class Grafo {
     }
 
     // Método para agregar un nodo
+    /**
+     * Agrega un nodo al grafo.
+     * @param nombre Nombre del nodo a agregar
+     */
     public void agregarVertice(String nombre) { // Eliminar el parámetro 'linea'
         if (!existeNodo(nombre)) {
             nodos[numNodos] = new Nodo(nombre); // Eliminar el parámetro 'linea'
@@ -34,6 +46,11 @@ public class Grafo {
     }
 
     // Método para agregar una arista (conexión)
+    /**
+     * Agrega una arista entre dos nodos del grafo.
+     * @param origen Nombre del nodo origen
+     * @param destino Nombre del nodo destino
+     */
     public void agregarArista(String origen, String destino) {
         int idxOrigen = obtenerIndice(origen);
         int idxDestino = obtenerIndice(destino);
@@ -148,6 +165,11 @@ public class Grafo {
         }
 
     // Método para obtener el índice de un nodo por nombre
+    /**
+     * Obtiene el índice de un nodo en el grafo basado en su nombre.
+     * @param nombre Nombre del nodo a buscar
+     * @return Índice del nodo en el arreglo, o -1 si no se encuentra
+     */
     public int obtenerIndice(String nombre) {
         for (int i = 0; i < numNodos; i++) {
             if (nodos[i] != null && nodos[i].getNombre().equals(nombre)) {
