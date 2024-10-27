@@ -9,12 +9,14 @@ class Nodo {
     private Nodo[] conexiones;
     private int conexionIndex;
     private boolean areaComercial; // Nuevo atributo para indicar si es un área comercial
+    private boolean sucursal;  // Nuevo atributo
 
     public Nodo(String nombre) {
         this.nombre = nombre;
         this.conexiones = new Nodo[10]; // Tamaño inicial, puede crecer dinámicamente
         this.conexionIndex = 0;
         this.areaComercial = false; // Inicialmente no es un área comercial
+        this.sucursal = false;  // Inicializado en falso por defecto
     }
 
     // Agrega una conexión entre nodos (vértices)
@@ -74,5 +76,13 @@ class Nodo {
 
     public void setAreaComercial(boolean areaComercial) {
         this.areaComercial = areaComercial;
+    }
+
+    public boolean isSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(boolean sucursal) {
+        this.sucursal = sucursal;
     }
 }

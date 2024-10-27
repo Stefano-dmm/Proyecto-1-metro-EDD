@@ -28,7 +28,7 @@ public class Grafo {
     public void agregarVertice(String nombre) { // Eliminar el parámetro 'linea'
         if (!existeNodo(nombre)) {
             nodos[numNodos] = new Nodo(nombre); // Eliminar el parámetro 'linea'
-            graphStream.addNode(nombre).addAttribute("ui.label", nombre);
+            getGraphStream().addNode(nombre).addAttribute("ui.label", nombre);
             numNodos++;
         }
     }
@@ -50,8 +50,8 @@ public class Grafo {
                 listaAdyacencia[idxDestino][idxOrigen] = 1;
 
                 String edgeId = origen + "-" + destino;
-                if (graphStream.getEdge(edgeId) == null) {
-                    graphStream.addEdge(edgeId, origen, destino);
+                if (getGraphStream().getEdge(edgeId) == null) {
+                    getGraphStream().addEdge(edgeId, origen, destino);
                 }
             }
 
@@ -72,15 +72,20 @@ public class Grafo {
         return false;
     }
 
-    public void agregarLinea(String[] estaciones) { // Eliminar el parámetro 'linea'
-        Nodo nodoAnterior = null;
-        for (String estacion : estaciones) {
-            agregarVertice(estacion); // Eliminar el parámetro 'linea'
-            if (nodoAnterior != null) {
-                agregarArista(nodoAnterior.getNombre(), estacion);
-            }
-            nodoAnterior = obtenerNodoPorNombre(estacion);  // método auxiliar para encontrar un nodo
+    public void agregarLinea(String estacion1, String estacion2) {
+        if (estacion1 == null || estacion2 == null || estacion1.equals(estacion2)) {
+            System.out.println("Error: Las estaciones deben ser diferentes y no nulas.");
+            return;
         }
+
+        // Asegurarse de que ambas estaciones existan
+        agregarVertice(estacion1);
+        agregarVertice(estacion2);
+
+        // Agregar la conexión entre las estaciones
+        agregarArista(estacion1, estacion2);
+
+        System.out.println("Línea agregada entre " + estacion1 + " y " + estacion2);
     }
 
     private Nodo obtenerNodoPorNombre(String nombre) {
@@ -91,6 +96,7 @@ public class Grafo {
         }
         return null;
     }
+
 
     public void eliminarEstacion(String nombre) {
         Nodo nodoAEliminar = obtenerNodoPorNombre(nombre);
@@ -116,8 +122,8 @@ public class Grafo {
         }
 
         // Si estás usando GraphStream, elimina también el nodo del grafo visualizado
-        if (graphStream.getNode(nombre) != null) {
-            graphStream.removeNode(nombre);
+        if (getGraphStream().getNode(nombre) != null) {
+            getGraphStream().removeNode(nombre);
         }
 
         System.out.println("La estación " + nombre + " ha sido eliminada.");
@@ -153,7 +159,7 @@ public class Grafo {
 
     // Método para visualizar el grafo
     public void visualizarGrafo() {
-        graphStream.display();
+        getGraphStream().display();
     }
 
     // Método para cargar el grafo desde la lista de nodos con manejo de conexiones entre líneas
@@ -492,6 +498,105 @@ public class Grafo {
                 Nodo conexion = nodos[i];
                 if (conexion != null) {
                     marcarComoAreaComercial(conexion, visitados, distanciaActual + 1, distanciaMaxima);
+                }
+            }
+        }
+    }
+
+    public Graph getGraphStream() {
+        return graphStream;
+    }
+
+    public void setGraphStream(Graph graphStream) {
+        this.graphStream = graphStream;
+    }
+
+    public void pintarGrafoConDistancia(String nombreNodoInicial, int distancia) {
+        // Ya no removemos los colores anteriores
+        // for (org.graphstream.graph.Node node : graphStream.getEachNode()) {
+        //     node.removeAttribute("ui.class");
+        // }
+
+        Nodo nodoInicial = obtenerNodoPorNombre(nombreNodoInicial);
+        if (nodoInicial == null) {
+            System.out.println("Nodo inicial no encontrado");
+            return;
+        }
+
+        // Marcar el nodo inicial
+        org.graphstream.graph.Node nodoGraphStream = graphStream.getNode(nombreNodoInicial);
+        nodoGraphStream.setAttribute("ui.class", "inicial");
+
+        // Lista para almacenar los nodos visitados y su distancia desde el inicial
+        boolean[] visitados = new boolean[nodos.length];
+        int[] distancias = new int[nodos.length];
+        for (int i = 0; i < distancias.length; i++) {
+            distancias[i] = Integer.MAX_VALUE;
+        }
+
+        int indiceInicial = obtenerIndice(nombreNodoInicial);
+        distancias[indiceInicial] = 0;
+
+        java.util.Queue<Integer> cola = new java.util.LinkedList<>();
+        cola.offer(indiceInicial);
+        visitados[indiceInicial] = true;
+
+        while (!cola.isEmpty()) {
+            int actual = cola.poll();
+            
+            for (int i = 0; i < nodos.length; i++) {
+                if (listaAdyacencia[actual][i] == 1 && !visitados[i]) {
+                    distancias[i] = distancias[actual] + 1;
+                    visitados[i] = true;
+                    cola.offer(i);
+                    
+                    if (distancias[i] <= distancia) {
+                        org.graphstream.graph.Node nodoAdyacente = graphStream.getNode(nodos[i].getNombre());
+                        nodoAdyacente.setAttribute("ui.class", "covertura");
+                    }
+                }
+            }
+        }
+    }
+
+    public void pintarGrafoDFS(String nombreNodoInicial, int cantidadNodos) {
+        // Ya no removemos los colores anteriores
+        // for (org.graphstream.graph.Node node : graphStream.getEachNode()) {
+        //     node.removeAttribute("ui.class");
+        // }
+
+        Nodo nodoInicial = obtenerNodoPorNombre(nombreNodoInicial);
+        if (nodoInicial == null) {
+            System.out.println("Nodo inicial no encontrado");
+            return;
+        }
+
+        // Marcar el nodo inicial
+        org.graphstream.graph.Node nodoGraphStream = graphStream.getNode(nombreNodoInicial);
+        nodoGraphStream.setAttribute("ui.class", "inicial");
+
+        boolean[] visitados = new boolean[nodos.length];
+        int[] nodosPintados = new int[1];
+        nodosPintados[0] = 0;
+        
+        dfsRecursivo(obtenerIndice(nombreNodoInicial), visitados, nodosPintados, cantidadNodos);
+    }
+
+    private void dfsRecursivo(int indiceNodo, boolean[] visitados, int[] nodosPintados, int limite) {
+        if (nodosPintados[0] >= limite) {
+            return;
+        }
+
+        visitados[indiceNodo] = true;
+        
+        for (int i = 0; i < nodos.length; i++) {
+            if (listaAdyacencia[indiceNodo][i] == 1 && !visitados[i]) {
+                if (nodosPintados[0] < limite) {
+                    org.graphstream.graph.Node nodoAdyacente = graphStream.getNode(nodos[i].getNombre());
+                    nodoAdyacente.setAttribute("ui.class", "covertura");
+                    nodosPintados[0]++;
+                    
+                    dfsRecursivo(i, visitados, nodosPintados, limite);
                 }
             }
         }

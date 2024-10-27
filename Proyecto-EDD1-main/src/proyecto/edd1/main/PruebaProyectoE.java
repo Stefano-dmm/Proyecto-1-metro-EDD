@@ -4,9 +4,6 @@
  */
 package proyecto.edd1.main;
 
-import proyecto.edd1.main.Nodo;
-import proyecto.edd1.main.FileExplorer;
-
 /**
  *
  * @author luisg
@@ -28,7 +25,7 @@ public class PruebaProyectoE {
         System.out.println(grafo.obtenerListaAdyacencia()); // Imprimir la lista de adyacencia
 
         // Crear y mostrar la ventana de EditorDeGrafo pasando el grafo
-        EditorDeGrafo editorDeGrafo = new EditorDeGrafo(grafo); // Asegúrate de pasar el grafo aquí
+        EditorDeGrafo editorDeGrafo = new EditorDeGrafo(grafo, grafo.getGraphStream()); // Asegúrate de pasar el grafo aquí
         editorDeGrafo.setVisible(true);
         
         // Visualizar el grafo

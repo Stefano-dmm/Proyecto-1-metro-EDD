@@ -82,35 +82,42 @@ public class FileExplorer {
 
                         // Ignorar nodos que comienzan con "Linea" o "Avenida"
                         if (!nombreNodo.startsWith("Linea ") && !nombreNodo.startsWith("Avenida ")) {
-                            Nodo nodoActual = null;
-                            for (int i = 0; i < nodoIndex; i++) {
-                                if (nodos[i] != null && nodos[i].getNombre().equals(nombreNodo)) {
-                                    nodoActual = nodos[i];
-                                    break;
-                                }
-                            }
+                    Nodo nodoActual = null;
+                    for (int i = 0; i < nodoIndex; i++) {
+                        if (nodos[i] != null && nodos[i].getNombre().equals(nombreNodo)) {
+                            nodoActual = nodos[i];
+                            break;
+                        }
+                    }
 
-                            if (nodoActual == null) {
-                                nodoActual = new Nodo(nombreNodo); // Eliminar el parámetro 'linea'
-                                if (nodoIndex >= nodos.length) {
-                                    // Duplicar el tamaño del arreglo si se alcanza el límite
-                                    Nodo[] temp = new Nodo[nodos.length * 2];
-                                    System.arraycopy(nodos, 0, temp, 0, nodos.length);
-                                    nodos = temp;
-                                }
-                                nodos[nodoIndex++] = nodoActual;
-                            }
+                    if (nodoActual == null) {
+                        nodoActual = new Nodo(nombreNodo);
+                        if (nodoIndex >= nodos.length) {
+                            Nodo[] temp = new Nodo[nodos.length * 2];
+                            System.arraycopy(nodos, 0, temp, 0, nodos.length);
+                            nodos = temp;
+                        }
+                        nodos[nodoIndex++] = nodoActual;
+                    }
 
-                            // Solo agregar conexiones si están explícitamente definidas en el JSON
-                            if (nodoAnterior != null) {
-                                // No agregar conexiones para "Palo Verde" si no está conectado a ningún otro nodo
-                                if (!nodoAnterior.getNombre().equals("Palo Verde")) {
-                                    nodoAnterior.agregarConexion(nodoActual);
-                                    System.out.println("    Conexión creada: " + nodoAnterior.getNombre() + " -> " + nodoActual.getNombre());
-                                } else {
-                                    System.out.println("    Nodo Palo Verde no tiene conexiones especificadas, no se crea conexión.");
-                                }
-                            }
+                    // Validaciones específicas
+                    if (nodoAnterior != null) {
+                        if (!nodoAnterior.getNombre().equals("Zoologico") &&
+                            !nodoActual.getNombre().equals("Ruiz Pineda") &&
+                            !(nodoAnterior.getNombre().equals("La Rinconada") && !nodoActual.getNombre().equals("Mercado")) &&
+                            !(nodoAnterior.getNombre().equals("Palo Verde") || 
+                              (nodoActual.getNombre().equals("Palo Verde") && !nodoAnterior.getNombre().equals("Petare")) ||
+                              (nodoAnterior.getNombre().equals("Palo Verde") && nodoActual.getNombre().equals("Capuchinos")))) {
+                            nodoAnterior.agregarConexion(nodoActual);
+                            nodoActual.agregarConexion(nodoAnterior);
+                            System.out.println("    Conexión creada: " + nodoAnterior.getNombre() + " <-> " + nodoActual.getNombre());
+                        } else {
+                            System.out.println("    No se crea conexión para: " + nodoAnterior.getNombre() + " -> " + nodoActual.getNombre());
+                        }
+                    
+                    
+
+                    }
 
                             if (conexionOtraLinea != null && !conexionOtraLinea.startsWith("Linea ") && !conexionOtraLinea.startsWith("Avenida ")) {
                                 Nodo nodoConexion = null;
@@ -142,6 +149,28 @@ public class FileExplorer {
                     }
                     System.out.println(); // Línea en blanco entre líneas de metro
                 }
+                 Nodo ciudadUniversitariaNode = null;
+        Nodo plazaVenezuelaNode = null;
+
+        for (int i = 0; i < nodoIndex; i++) {
+            if (nodos[i] != null) {
+                if (nodos[i].getNombre().equals("Ciudad Universitaria")) {
+                    ciudadUniversitariaNode = nodos[i];
+                }
+                if (nodos[i].getNombre().equals("Plaza Venezuela")) {
+                    plazaVenezuelaNode = nodos[i];
+                }
+            }
+        }
+
+        if (ciudadUniversitariaNode != null && plazaVenezuelaNode != null) {
+            ciudadUniversitariaNode.agregarConexion(plazaVenezuelaNode);
+            plazaVenezuelaNode.agregarConexion(ciudadUniversitariaNode);
+            System.out.println("Conexión creada: Ciudad Universitaria <-> Plaza Venezuela");
+        } else {
+            System.out.println("No se pudo establecer la conexión entre Ciudad Universitaria y Plaza Venezuela, uno de los nodos no se encontró.");
+        }
+
 
                 // Establecer la conexión entre "Capuchinos" y "El Silencio"
                 Nodo capuchinosNode = null;
@@ -192,7 +221,7 @@ public class FileExplorer {
             return null;
         }
     }
-
+    
     // Nueva función para guardar la lista de adyacencia en un String (variable)
     public String saveAdjacencyListToString(Nodo[] adjacencyList) {
         if (adjacencyList == null || adjacencyList.length == 0) {
