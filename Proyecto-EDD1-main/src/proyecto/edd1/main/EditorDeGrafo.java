@@ -6,8 +6,6 @@ package proyecto.edd1.main;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import java.util.ArrayList;
-import java.util.List;
 import org.graphstream.graph.Graph;
 
 /**

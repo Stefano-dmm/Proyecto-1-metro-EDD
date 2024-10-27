@@ -512,11 +512,6 @@ public class Grafo {
     }
 
     public void pintarGrafoConDistancia(String nombreNodoInicial, int distancia) {
-        // Ya no removemos los colores anteriores
-        // for (org.graphstream.graph.Node node : graphStream.getEachNode()) {
-        //     node.removeAttribute("ui.class");
-        // }
-
         Nodo nodoInicial = obtenerNodoPorNombre(nombreNodoInicial);
         if (nodoInicial == null) {
             System.out.println("Nodo inicial no encontrado");
@@ -537,18 +532,19 @@ public class Grafo {
         int indiceInicial = obtenerIndice(nombreNodoInicial);
         distancias[indiceInicial] = 0;
 
-        java.util.Queue<Integer> cola = new java.util.LinkedList<>();
-        cola.offer(indiceInicial);
+        // Usar nuestra propia implementación de Cola
+        Cola cola = new Cola();
+        cola.encolar(indiceInicial);
         visitados[indiceInicial] = true;
 
-        while (!cola.isEmpty()) {
-            int actual = cola.poll();
+        while (!cola.estaVacia()) {
+            int actual = cola.desencolar();
             
             for (int i = 0; i < nodos.length; i++) {
                 if (listaAdyacencia[actual][i] == 1 && !visitados[i]) {
                     distancias[i] = distancias[actual] + 1;
                     visitados[i] = true;
-                    cola.offer(i);
+                    cola.encolar(i);
                     
                     if (distancias[i] <= distancia) {
                         org.graphstream.graph.Node nodoAdyacente = graphStream.getNode(nodos[i].getNombre());
