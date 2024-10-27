@@ -8,20 +8,20 @@ import org.graphstream.graph.Graph;
 
 public class EditorNodoDialog extends JDialog {
     private JTextField nombreField;
-    private JCheckBox areaComercialCheckBox; // Agregar JCheckBox para área comercial
+    private JCheckBox areaComercialCheckBox;
+    private JCheckBox sucursalCheckBox;  // Nuevo checkbox para sucursal
     private JButton guardarButton;
     private JButton eliminarButton;
     private Nodo nodo;
     private Grafo grafo;
     private Graph graphstream;
-    private JCheckBox jCheckBoxSucursal;
 
     public EditorNodoDialog(Frame parent, Nodo nodo, Grafo grafo, Graph graphstream) {
         super(parent, "Editar Nodo", true);
         this.nodo = nodo;
         this.grafo = grafo;
         this.graphstream = graphstream;
-        setLayout(new GridLayout(4, 2)); // Cambiar a 4 filas
+        setLayout(new GridLayout(5, 2)); // Cambiado a 5 filas para incluir el nuevo checkbox
 
         // Campo para editar el nombre del nodo
         add(new JLabel("Nombre del Nodo:"));
@@ -31,8 +31,14 @@ public class EditorNodoDialog extends JDialog {
         // Checkbox para el área comercial
         add(new JLabel("Área Comercial:"));
         areaComercialCheckBox = new JCheckBox();
-        areaComercialCheckBox.setSelected(nodo.isAreaComercial()); // Establecer el estado inicial
+        areaComercialCheckBox.setSelected(nodo.isAreaComercial());
         add(areaComercialCheckBox);
+
+        // Checkbox para sucursal
+        add(new JLabel("Sucursal:"));
+        sucursalCheckBox = new JCheckBox();
+        sucursalCheckBox.setSelected(nodo.isSucursal());
+        add(sucursalCheckBox);
 
         // Botón para guardar cambios
         guardarButton = new JButton("Guardar");
@@ -54,15 +60,8 @@ public class EditorNodoDialog extends JDialog {
         });
         add(eliminarButton);
 
-        // Checkbox para sucursal
-        jCheckBoxSucursal = new JCheckBox();
-        jCheckBoxSucursal.setText("Sucursal");
-        jCheckBoxSucursal.setSelected(nodo.isSucursal());
-        add(jCheckBoxSucursal);
-
         pack();
         setLocationRelativeTo(parent);
-        setVisible(true);
     }
 
     private void guardarCambios() {
@@ -70,19 +69,23 @@ public class EditorNodoDialog extends JDialog {
         if (!nuevoNombre.isEmpty()) {
             graphstream.getNode(nodo.getNombre()).setAttribute("ui.label", nuevoNombre);
             nodo.setNombre(nuevoNombre);
-            nodo.setAreaComercial(areaComercialCheckBox.isSelected()); // Actualizar el estado de área comercial
-            nodo.setSucursal(jCheckBoxSucursal.isSelected());
+            nodo.setAreaComercial(areaComercialCheckBox.isSelected());
+            nodo.setSucursal(sucursalCheckBox.isSelected());
             
-            // Si es una sucursal, actualizar el estilo en el grafo
-            if (nodo.isSucursal()) {
-                org.graphstream.graph.Node nodoGraph = graphstream.getNode(nodo.getNombre());
-                if (nodoGraph != null) {
-                    nodoGraph.setAttribute("ui.style", "shape: box;");
+            // Actualizar el estilo del nodo según si es sucursal o no
+            org.graphstream.graph.Node nodoGraph = graphstream.getNode(nodo.getNombre());
+            if (nodoGraph != null) {
+                if (sucursalCheckBox.isSelected()) {
+                    nodoGraph.setAttribute("ui.class", "inicial");
+                } else if (areaComercialCheckBox.isSelected()) {
+                    nodoGraph.setAttribute("ui.class", "covertura");
+                } else {
+                    nodoGraph.removeAttribute("ui.class");
                 }
             }
             
             JOptionPane.showMessageDialog(this, "Cambios guardados.");
-            dispose(); // Cerrar el diálogo
+            dispose();
         } else {
             JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
         }
